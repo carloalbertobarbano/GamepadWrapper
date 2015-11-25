@@ -25,7 +25,6 @@ void axisMove(struct Gamepad_device *gamepad, unsigned int axisId, float value, 
 bool running = true;
 
 
-struct Gamepad_device *currGamepad = NULL;
 
 float sensitivity = 5;
 float x_value = 0.0, y_value = 0.0;
@@ -47,10 +46,7 @@ int main(int argc, const char * argv[]) {
     Gamepad_axisMoveFunc(axisMove, NULL);
     
     
-    //std::thread mouseUpdateThread(moveMouse);
-    //mouseUpdateThread.join();
-    
-    /* TEST KEY HERE: wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwssssssssasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasssssssddddddddddddddddddddddddddddddddddddddddddaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasssssssssssssssssssssssssssssssdddddddaaaaassssswddddddddddaaaaaaawwwwwwwwwsssssssssddaaaadddddassssswwwwwwwwwwwdsdsdsdsdsdsdsdsasasasasasasasass */
+    /* TEST KEY HERE: */
     
     while(running){
         Gamepad_processEvents();
@@ -58,7 +54,7 @@ int main(int argc, const char * argv[]) {
         updateMouse();
         updateKeyboard();
         
-        usleep(5 * 1000);
+		Pause(5);
     }
 
    
@@ -76,14 +72,11 @@ void gamepadAttach(struct Gamepad_device *gamepad, void *context) {
     cout << "\tDescription: " << gamepad->description << endl;
     cout << "\tNum. Axes: " << gamepad->numAxes << endl;
     cout << "\tNum. Buttons: " << gamepad->numButtons << endl;
-    
-    currGamepad = gamepad;
-    
 }
 
 void gamepadRemove(struct Gamepad_device *gamepad, void *context) {
     cout << "Device removed.." << endl;
-    running = false;
+    //running = false;
 }
 
 
@@ -179,8 +172,8 @@ void axisMove(struct Gamepad_device *gamepad, unsigned int axisId, float value, 
 }
 
 void updateMouse() {
-    CGPoint cursor = getCursorPosition();
-
+    GamepadWrapper::Point cursor = getCursorPosition();
+    
     cursor.x += x_value*sensitivity;
     cursor.y += y_value*sensitivity;
     
