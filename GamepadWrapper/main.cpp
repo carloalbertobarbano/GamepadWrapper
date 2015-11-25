@@ -7,10 +7,11 @@
 //
 
 #include <iostream>
+#include <vector>
 
 #include "gamepad/Gamepad.h"
 #include "SysEvents.h"
-
+#include "Utils.h"
 
 using namespace std;
 
@@ -29,11 +30,28 @@ bool running = true;
 float sensitivity = 5;
 float x_value = 0.0, y_value = 0.0;
 
-bool w_pressed = false, a_pressed = false, s_pressed = false, d_pressed = false;
+
+std::vector<int> keycodes;
+std::vector<bool> keystate;
+
 void updateMouse();
 void updateKeyboard();
 
 int main(int argc, const char * argv[]) {
+    
+    keycodes.push_back(0x00);
+    keycodes.push_back(0x01);
+    keycodes.push_back(0x02);
+    keycodes.push_back(0x0D);
+    keycodes.push_back(0x38);
+    keycodes.push_back(0x0F);
+    
+    for(int i = 0; i < keycodes.size(); i++) {
+        keystate.push_back(false);
+    }
+        
+    
+    
     Gamepad_deviceAttachFunc(gamepadAttach, NULL);
     Gamepad_deviceRemoveFunc(gamepadRemove, NULL);
     
@@ -85,6 +103,10 @@ void buttonDown(struct Gamepad_device *gamepad, unsigned int buttonId, double ti
     cout << "Pressed button: " << buttonId << endl;
     
     switch(buttonId) {
+        case 3:
+            keystate[find(keycodes, 0x0F)] = true;//r
+            break;
+        
         case 4:
             mouseClick(MouseButtons::BUTTON_RIGHT);
             break;
@@ -96,6 +118,10 @@ void buttonDown(struct Gamepad_device *gamepad, unsigned int buttonId, double ti
         case 9:
             running = false;
             break;
+        
+        case 10:
+            keystate[find(keycodes, 0x38)] = true; //SHIFT
+            break;
             
         default: break;
     }
@@ -105,12 +131,20 @@ void buttonUp(struct Gamepad_device *gamepad, unsigned int buttonId, double time
     cout << "Button up: " << buttonId << endl;
     
     switch(buttonId) {
+        case 3:
+            keystate[find(keycodes, 0x0F)] = false;//r
+            break;
+            
         case 4:
             mouseUp(MouseButtons::BUTTON_RIGHT);
             break;
             
         case 5:
             mouseUp(MouseButtons::BUTTON_LEFT);
+            break;
+          
+        case 10:
+            keystate[find(keycodes, 0x38)] = false; //SHIFT
             break;
             
         default: break;
@@ -120,7 +154,7 @@ void buttonUp(struct Gamepad_device *gamepad, unsigned int buttonId, double time
 
 
 void axisMove(struct Gamepad_device *gamepad, unsigned int axisId, float value, float lastValue, double timestamp, void *context) {
-    cout << "Axis " << axisId << " moved: " << value << endl;
+        cout << "Axis " << axisId << " moved: " << value << endl;
     
     static float deadZone = 0.1;
     if(value < deadZone && value > -deadZone)
@@ -129,33 +163,26 @@ void axisMove(struct Gamepad_device *gamepad, unsigned int axisId, float value, 
     switch(axisId) {
         case 0:
             if(value == 0.0) {
-                a_pressed = false;
-                d_pressed = false;
-                keyboardUp(0x00);
-                keyboardUp(0x02);
+                keystate[find(keycodes, 0x00)] = false; //a
+                keystate[find(keycodes, 0x02)] = false; //d
             } else {
                 if(value > 0)
-                    d_pressed = true;
-                    //keyboardPress(0x02);
+                    keystate[find(keycodes, 0x02)] = true;
                 else
-                    a_pressed = true;
-                    //keyboardPress(0x00);
+                    keystate[find(keycodes, 0x00)] = true;
             }
             break;
             
         case 1:
             if(value == 0.0) {
-                w_pressed = false;
-                s_pressed = false;
-                keyboardUp(0x0D);
-                keyboardUp(0x01);
+                keystate[find(keycodes, 0x0D)] = false; //w
+                keystate[find(keycodes, 0x01)] = false; //s
+
             } else {
                 if(value > 0.0)
-                    s_pressed = true;
-                    //keyboardPress(0x01);
+                    keystate[find(keycodes, 0x01)] = true;
                 else
-                    w_pressed = true;
-                    //keyboardPress(0x0D);
+                    keystate[find(keycodes, 0x0D)] = true;
             }
             break;
             
@@ -166,7 +193,7 @@ void axisMove(struct Gamepad_device *gamepad, unsigned int axisId, float value, 
         case 3:
             y_value = value;
             break;
-            
+        
         default: break;
     }
 }
@@ -174,31 +201,21 @@ void axisMove(struct Gamepad_device *gamepad, unsigned int axisId, float value, 
 void updateMouse() {
     GamepadWrapper::Point cursor = getCursorPosition();
     
+    //cout << "Cursor position: " << cursor.x << " " << cursor.y << endl;
+    
     cursor.x += x_value*sensitivity;
     cursor.y += y_value*sensitivity;
-    
+   
+    //cout << "New position:    " << cursor.x << " " << cursor.y << endl;
     
     setCursorPosition(cursor);
 }
 
 void updateKeyboard() {
-    if(a_pressed)
-        keyboardPress(0x00);
-    else
-        keyboardUp(0x00);
-    
-    if(d_pressed)
-        keyboardPress(0x02);
-    else
-        keyboardUp(0x02);
-    
-    if(w_pressed)
-        keyboardPress(0x0D);
-    else
-        keyboardUp(0x0D);
-    
-    if(s_pressed)
-        keyboardPress(0x01);
-    else
-        keyboardUp(0x01);
+      for(int i = 0;i < keycodes.size(); i++) {
+        if(keystate[i])
+            keyboardPress(keycodes[i]);
+        else
+            keyboardUp(keycodes[i]);
+    }
 }

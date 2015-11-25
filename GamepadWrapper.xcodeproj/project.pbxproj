@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84356DCC1C060850004AD44D /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84356DCA1C060850004AD44D /* Utils.cpp */; };
 		849626611C03053000B4E3E2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 849626601C03053000B4E3E2 /* main.cpp */; };
 		849626691C030C2500B4E3E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 849626681C030C2500B4E3E2 /* IOKit.framework */; };
 		8496266F1C0317BD00B4E3E2 /* Gamepad_macosx.c in Sources */ = {isa = PBXBuildFile; fileRef = 8496266B1C0317BD00B4E3E2 /* Gamepad_macosx.c */; };
@@ -28,6 +29,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		84356DCA1C060850004AD44D /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
+		84356DCB1C060850004AD44D /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		8496265D1C03053000B4E3E2 /* GamepadWrapper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GamepadWrapper; sourceTree = BUILT_PRODUCTS_DIR; };
 		849626601C03053000B4E3E2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		849626681C030C2500B4E3E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -78,6 +81,8 @@
 				849626601C03053000B4E3E2 /* main.cpp */,
 				84A40CA01C037CC100224D66 /* SysEvents.h */,
 				84A40CA11C037D1F00224D66 /* SysEvents.cpp */,
+				84356DCA1C060850004AD44D /* Utils.cpp */,
+				84356DCB1C060850004AD44D /* Utils.h */,
 			);
 			path = GamepadWrapper;
 			sourceTree = "<group>";
@@ -152,6 +157,7 @@
 				84A40CA21C037D1F00224D66 /* SysEvents.cpp in Sources */,
 				849626701C0317BD00B4E3E2 /* Gamepad_private.c in Sources */,
 				8496266F1C0317BD00B4E3E2 /* Gamepad_macosx.c in Sources */,
+				84356DCC1C060850004AD44D /* Utils.cpp in Sources */,
 				849626611C03053000B4E3E2 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
